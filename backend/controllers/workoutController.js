@@ -3,9 +3,17 @@ const Workout = require('../models/Workout')
 
 const createWorkout = async (req, res) => {
     try {
+
+        const{exercises,date} = req.body;
+
+        if(!Array.isArray(exercises) || exercises.length === 0){
+          return res.status(400).json({message: 'At least one exercise is required'});
+        }
+
         const workout = await Workout.create({
-        user: req.user,
-        ...req.body,
+        user: req.user || req.user,
+        date: date || new Date(),
+        exercises
       });
       res.status(201).json(workout);
     } catch (err) {
